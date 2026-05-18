@@ -7,10 +7,10 @@ Base URL: `http://localhost:8000/api`
 | Endpoint | Method | Auth | Status |
 |----------|--------|------|--------|
 | `/health` | GET | No | Done |
-| `/register` | POST | No | Planned |
-| `/login` | POST | No | Planned |
-| `/logout` | POST | Bearer | Planned |
-| `/user` | GET | Bearer | Planned |
+| `/register` | POST | No | Done |
+| `/login` | POST | No | Done |
+| `/logout` | POST | Bearer | Done |
+| `/user` | GET | Bearer | Done |
 | `/categories` | GET | No | Planned |
 | `/jobs` | GET | No | Planned |
 | `/jobs/{id}` | GET | No | Planned |
