@@ -4,15 +4,24 @@ Laravel 11 API-only application with Sanctum authentication.
 
 ## Quick start
 
-```bash
-# From project root
-docker compose up -d
+From project root (PowerShell):
 
-# Migrate + seed (PowerShell)
-docker run --rm -v "${PWD}/backend:/app" -w /app --add-host=host.docker.internal:host-gateway -e DB_HOST=host.docker.internal php:8.4-cli bash -c "docker-php-ext-install pdo_mysql > /dev/null 2>&1 && php artisan migrate:fresh --seed --force"
+```powershell
+.\scripts\start-dev.ps1
+```
 
-# Serve API
-docker run --rm -p 8000:8000 -v "${PWD}/backend:/app" -w /app --add-host=host.docker.internal:host-gateway -e DB_HOST=host.docker.internal php:8.4-cli bash -c "docker-php-ext-install pdo_mysql > /dev/null 2>&1 && php artisan serve --host=0.0.0.0"
+Or manually: `docker compose up -d`
+
+| URL | What |
+|-----|------|
+| http://localhost:8000/api/health | API health check |
+| http://localhost:8000/ | Laravel welcome page |
+| http://localhost:8000/api | API base path |
+
+First-time DB setup:
+
+```powershell
+docker exec accountant_hub_api php artisan migrate:fresh --seed --force
 ```
 
 ## Documentation
