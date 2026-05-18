@@ -12,7 +12,7 @@ class DatabaseConnectionTest extends TestCase
         $pdo = DB::connection()->getPdo();
 
         $this->assertNotNull($pdo);
-        $this->assertSame('1', DB::selectOne('SELECT 1 AS ok')->ok);
+        $this->assertSame(1, (int) DB::selectOne('SELECT 1 AS ok')->ok);
     }
 
     public function test_expected_tables_exist_on_mysql(): void
