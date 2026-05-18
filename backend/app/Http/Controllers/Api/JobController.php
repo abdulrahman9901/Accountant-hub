@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Actions\Jobs\BrowseJobsAction;
+use App\Actions\Jobs\GetJobDetailsAction;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\JobResource;
 use Illuminate\Http\JsonResponse;
@@ -35,6 +36,18 @@ class JobController extends Controller
                 'per_page' => $jobs->perPage(),
                 'total' => $jobs->total(),
             ],
+        ], 200);
+    }
+
+    /**
+     * Display the specified job with its bids count and category.
+     */
+    public function show(int $id, GetJobDetailsAction $action): JsonResponse
+    {
+        $job = $action->execute($id);
+
+        return response()->json([
+            'data' => new JobResource($job),
         ], 200);
     }
 }
