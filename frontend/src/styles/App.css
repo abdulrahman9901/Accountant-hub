@@ -116,10 +116,10 @@
   background-color: var(--primary-hover);
 }
 
-/* Jobs Listings Grid */
+/* Jobs Listings Grid (now a vertical list) */
 .jobs-cards-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 24px;
 }
 
