@@ -26,4 +26,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'user']);
     Route::post('/jobs/{id}/bids', [BidController::class, 'store']);
+    Route::get('/user/bids', [BidController::class, 'index']);
 });
