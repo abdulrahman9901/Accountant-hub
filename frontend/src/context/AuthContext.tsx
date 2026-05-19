@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import React, { createContext, useContext, useState, useEffect, type ReactNode, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, type ReactNode, useCallback, useMemo } from 'react';
 import type { User } from '../types';
 import { request } from '../api/client';
 
@@ -86,8 +86,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     };
   }, [token]);
 
+  const contextValue = useMemo(() => ({
+    user,
+    token,
+    loading,
+    login,
+    logout,
+    checkAuth
+  }), [user, token, loading, login, logout, checkAuth]);
+
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, logout, checkAuth }}>
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );
