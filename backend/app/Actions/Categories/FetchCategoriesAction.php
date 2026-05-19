@@ -6,6 +6,7 @@ namespace App\Actions\Categories;
 
 use App\Models\JobCategory;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Cache;
 
 readonly class FetchCategoriesAction
 {
@@ -16,8 +17,12 @@ readonly class FetchCategoriesAction
      */
     public function execute(): Collection
     {
-        return JobCategory::query()
-            ->orderBy('name')
-            ->get();
+        return Cache::remember(
+            'job_categories',
+            now()->addHour(),
+            fn() => JobCategory::query()
+                ->orderBy('name')
+                ->get()
+        );
     }
 }
