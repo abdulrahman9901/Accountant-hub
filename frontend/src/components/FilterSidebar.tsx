@@ -19,6 +19,8 @@ interface FilterSidebarProps {
 export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, onChange }) => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [searchVal, setSearchVal] = useState(filters.search);
+  const [minVal, setMinVal] = useState(filters.min_budget);
+  const [maxVal, setMaxVal] = useState(filters.max_budget);
 
   // Load categories for filter listing
   useEffect(() => {
@@ -33,32 +35,74 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, onChange 
     fetchCats();
   }, []);
 
+  // Sync internal states when parent state is modified (e.g. active chips cleared or reset) using standard render-time adjustments
+  const [prevSearch, setPrevSearch] = useState(filters.search);
+  if (filters.search !== prevSearch) {
+    setPrevSearch(filters.search);
+    setSearchVal(filters.search);
+  }
+
+  const [prevMin, setPrevMin] = useState(filters.min_budget);
+  if (filters.min_budget !== prevMin) {
+    setPrevMin(filters.min_budget);
+    setMinVal(filters.min_budget);
+  }
+
+  const [prevMax, setPrevMax] = useState(filters.max_budget);
+  if (filters.max_budget !== prevMax) {
+    setPrevMax(filters.max_budget);
+    setMaxVal(filters.max_budget);
+  }
+
+  // Keep a mutable ref of the parent filters to bypass debouncing dependency race conditions
+  const filtersRef = React.useRef(filters);
+  useEffect(() => {
+    filtersRef.current = filters;
+  }, [filters]);
+
   // Debounce search input changes
   useEffect(() => {
     const handler = setTimeout(() => {
-      if (searchVal !== filters.search) {
-        onChange({ ...filters, search: searchVal });
+      if (searchVal !== filtersRef.current.search) {
+        onChange({ ...filtersRef.current, search: searchVal });
       }
     }, 400);
-
     return () => clearTimeout(handler);
-  }, [searchVal, filters, onChange]);
+  }, [searchVal, onChange]);
+
+  // Debounce min budget input changes
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (minVal !== filtersRef.current.min_budget) {
+        onChange({ ...filtersRef.current, min_budget: minVal });
+      }
+    }, 400);
+    return () => clearTimeout(handler);
+  }, [minVal, onChange]);
+
+  // Debounce max budget input changes
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (maxVal !== filtersRef.current.max_budget) {
+        onChange({ ...filtersRef.current, max_budget: maxVal });
+      }
+    }, 400);
+    return () => clearTimeout(handler);
+  }, [maxVal, onChange]);
 
   const handleCategorySelect = (slug: string) => {
     const selected = filters.category === slug ? '' : slug;
-    onChange({ ...filters, category: selected });
-  };
-
-  const handleBudgetChange = (field: 'min_budget' | 'max_budget', val: string) => {
-    onChange({ ...filters, [field]: val });
+    onChange({ ...filtersRef.current, category: selected });
   };
 
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    onChange({ ...filters, sort_by: e.target.value });
+    onChange({ ...filtersRef.current, sort_by: e.target.value });
   };
 
   const handleReset = () => {
     setSearchVal('');
+    setMinVal('');
+    setMaxVal('');
     onChange({
       search: '',
       category: '',
@@ -94,7 +138,10 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, onChange 
             fontSize: '0.8rem',
             fontWeight: 600,
             color: 'var(--primary)',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            border: 'none',
+            background: 'none',
+            padding: 0
           }}
         >
           Reset All
@@ -173,7 +220,9 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, onChange 
                   color: isChecked ? 'var(--primary)' : 'var(--text-muted)',
                   cursor: 'pointer',
                   padding: '4px 0',
-                  transition: 'var(--transition)'
+                  transition: 'var(--transition)',
+                  border: 'none',
+                  background: 'none'
                 }}
               >
                 <div style={{
@@ -206,8 +255,8 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, onChange 
           <input 
             type="number"
             placeholder="Min"
-            value={filters.min_budget}
-            onChange={(e) => handleBudgetChange('min_budget', e.target.value)}
+            value={minVal}
+            onChange={(e) => setMinVal(e.target.value)}
             style={{
               width: '100%',
               padding: '10px',
@@ -221,8 +270,8 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, onChange 
           <input 
             type="number"
             placeholder="Max"
-            value={filters.max_budget}
-            onChange={(e) => handleBudgetChange('max_budget', e.target.value)}
+            value={maxVal}
+            onChange={(e) => setMaxVal(e.target.value)}
             style={{
               width: '100%',
               padding: '10px',
