@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+/* eslint-disable react-refresh/only-export-components */
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { User } from '../types';
 import { request } from '../api/client';
 
@@ -18,13 +19,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
   const [loading, setLoading] = useState<boolean>(true);
 
-  const login = (newToken: string, newUser: User) => {
+  const login = useCallback((newToken: string, newUser: User) => {
     localStorage.setItem('token', newToken);
     setToken(newToken);
     setUser(newUser);
-  };
+  }, []);
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
       await request('/logout', { method: 'POST' });
     } catch (e) {
@@ -34,9 +35,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setToken(null);
       setUser(null);
     }
-  };
+  }, []);
 
-  const checkAuth = async () => {
+  const checkAuth = useCallback(async () => {
     if (!token) {
       setLoading(false);
       return;
@@ -53,10 +54,36 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
-    checkAuth();
+    let active = true;
+    
+    const verify = async () => {
+      if (!token) {
+        if (active) setLoading(false);
+        return;
+      }
+      try {
+        const response = await request<User>('/user');
+        if (active) setUser(response.data);
+      } catch (e) {
+        console.error('Auth verification failed', e);
+        if (active) {
+          localStorage.removeItem('token');
+          setToken(null);
+          setUser(null);
+        }
+      } finally {
+        if (active) setLoading(false);
+      }
+    };
+
+    verify();
+
+    return () => {
+      active = false;
+    };
   }, [token]);
 
   return (
