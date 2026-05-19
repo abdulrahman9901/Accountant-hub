@@ -6,6 +6,9 @@ namespace App\Actions\Jobs;
 
 use App\Models\Job;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 readonly class BrowseJobsAction
 {
@@ -23,9 +26,11 @@ readonly class BrowseJobsAction
     public function execute(array $filters = []): LengthAwarePaginator
     {
         $page = request()->get('page', 1);
-        $cacheKey = 'jobs_listing_' . md5(json_encode($filters) . "_page_$page");
+        $user = auth('sanctum')->user();
+        $userId = $user ? $user->id : 'guest';
+        $cacheKey = 'jobs_listing_' . md5(json_encode($filters) . "_page_{$page}_user_{$userId}");
 
-        return \Illuminate\Support\Facades\Cache::remember($cacheKey, 30, function () use ($filters, $page) {
+        return Cache::remember($cacheKey, 30, function () use ($filters, $page, $user) {
             $start = microtime(true);
 
             $query = Job::query()
@@ -33,13 +38,28 @@ readonly class BrowseJobsAction
                 ->withCount('bids')
                 ->where('status', 'open');
 
+            // Exclude jobs the authenticated user has already bid on
+            if ($user) {
+                $query->whereNotIn('id', function ($q) use ($user) {
+                    $q->select('job_id')
+                      ->from('bids')
+                      ->where('user_id', $user->id);
+                });
+            }
+
             // Apply keyword search in title or description
             if (! empty($filters['search'])) {
                 $search = $filters['search'];
-                // Use full text search if available, fallback to LIKE
-                $query->whereRaw("MATCH(title, description) AGAINST(? IN BOOLEAN MODE)", [$search])
-                      ->orWhere('title', 'like', "%{$search}%")
-                      ->orWhere('description', 'like', "%{$search}%");
+                $query->where(function ($q) use ($search) {
+                    if (DB::getDriverName() !== 'sqlite') {
+                        $q->whereRaw("MATCH(title, description) AGAINST(? IN BOOLEAN MODE)", [$search])
+                          ->orWhere('title', 'like', "%{$search}%")
+                          ->orWhere('description', 'like', "%{$search}%");
+                    } else {
+                        $q->where('title', 'like', "%{$search}%")
+                          ->orWhere('description', 'like', "%{$search}%");
+                    }
+                });
             }
 
             // Apply category filter (by slug or database ID)
@@ -86,7 +106,7 @@ readonly class BrowseJobsAction
 
             if (app()->environment('local')) {
                 $duration = round((microtime(true) - $start) * 1000, 2);
-                \Illuminate\Support\Facades\Log::info("Jobs query took {$duration}ms", [
+                Log::info("Jobs query took {$duration}ms", [
                     'sql'      => $query->toSql(),
                     'bindings' => $query->getBindings(),
                     'filters'  => $filters,

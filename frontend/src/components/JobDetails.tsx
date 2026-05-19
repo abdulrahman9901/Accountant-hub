@@ -107,6 +107,11 @@ export const JobDetails: React.FC<JobDetailsProps> = ({ job, onClose, onOpenAuth
 
       setSuccess(true);
       onBidSuccess();
+      
+      // Auto close the drawer after showing the success toast animation
+      setTimeout(() => {
+        onClose();
+      }, 2500);
     } catch (err) {
       const apiErr = err as ApiError;
       setErrorMessage(apiErr.message || 'Failed to submit proposal. Please review errors below.');

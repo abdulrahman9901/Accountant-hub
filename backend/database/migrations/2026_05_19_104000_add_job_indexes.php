@@ -16,7 +16,9 @@ return new class extends Migration
             $table->index('category_id', 'jobs_category_id_index');
             
             // Full-text index for fast text search
-            $table->fullText(['title', 'description'], 'jobs_fulltext_title_desc');
+            if (Schema::getConnection()->getDriverName() !== 'sqlite') {
+                $table->fullText(['title', 'description'], 'jobs_fulltext_title_desc');
+            }
         });
     }
 
@@ -28,7 +30,10 @@ return new class extends Migration
         Schema::table('jobs', function (Blueprint $table) {
             $table->dropIndex('jobs_budget_min_max_index');
             $table->dropIndex('jobs_category_id_index');
-            $table->dropFullText('jobs_fulltext_title_desc');
+            
+            if (Schema::getConnection()->getDriverName() !== 'sqlite') {
+                $table->dropFullText('jobs_fulltext_title_desc');
+            }
         });
     }
 };

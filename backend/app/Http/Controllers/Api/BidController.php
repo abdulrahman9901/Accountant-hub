@@ -11,6 +11,7 @@ use App\Http\Requests\Bids\SubmitBidRequest;
 use App\Http\Resources\BidResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class BidController extends Controller
 {
@@ -37,7 +38,7 @@ class BidController extends Controller
             $request->validated()
         );
 
-        \Illuminate\Support\Facades\Cache::flush(); // Invalidate job listings cache
+        Cache::flush(); // Invalidate job listings cache
 
         return response()->json([
             'data' => new BidResource($bid),

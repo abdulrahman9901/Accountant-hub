@@ -18,6 +18,8 @@ class BidResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'job_id' => $this->job_id,
+            'user_id' => $this->user_id,
             'proposed_price' => $this->proposed_price,
             'estimated_delivery_days' => $this->estimated_delivery_days,
             'cover_letter' => $this->cover_letter,
