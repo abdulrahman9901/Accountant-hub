@@ -14,7 +14,7 @@ interface JobDetailsProps {
 
 export const JobDetails: React.FC<JobDetailsProps> = ({ job, onClose, onOpenAuth, onBidSuccess }) => {
   const { token } = useAuth();
-  
+
   // Transition closing states - adjusted during render to avoid cascading effect lints
   const [prevJob, setPrevJob] = useState<Job | null>(job);
   const [renderJob, setRenderJob] = useState<Job | null>(job);
@@ -147,7 +147,7 @@ export const JobDetails: React.FC<JobDetailsProps> = ({ job, onClose, onOpenAuth
               {renderJob.status === 'open' ? 'Open' : 'Closed'}
             </span>
           </div>
-          <button 
+          <button
             onClick={onClose}
             className="details-drawer-close-btn"
           >
@@ -223,7 +223,7 @@ export const JobDetails: React.FC<JobDetailsProps> = ({ job, onClose, onOpenAuth
                 <p className="details-guest-text">
                   Please log in or register as an accountant to submit a proposal for this job.
                 </p>
-                <button 
+                <button
                   onClick={() => onOpenAuth('login')}
                   className="btn-details-guest-auth"
                 >
@@ -268,7 +268,7 @@ export const JobDetails: React.FC<JobDetailsProps> = ({ job, onClose, onOpenAuth
                 <div className="details-form-grid">
                   <div className="details-form-group">
                     <label className="details-form-label">Proposed Price ($)</label>
-                    <input 
+                    <input
                       type="number"
                       required
                       placeholder="e.g. 500"
@@ -279,7 +279,7 @@ export const JobDetails: React.FC<JobDetailsProps> = ({ job, onClose, onOpenAuth
                   </div>
                   <div className="details-form-group">
                     <label className="details-form-label">Est. Delivery (Days)</label>
-                    <input 
+                    <input
                       type="number"
                       required
                       placeholder="e.g. 5"
@@ -292,7 +292,7 @@ export const JobDetails: React.FC<JobDetailsProps> = ({ job, onClose, onOpenAuth
 
                 <div className="details-form-group">
                   <label className="details-form-label">Cover Letter</label>
-                  <textarea 
+                  <textarea
                     required
                     placeholder="Describe how you can help this client with their accounting needs..."
                     value={coverLetter}
@@ -303,7 +303,7 @@ export const JobDetails: React.FC<JobDetailsProps> = ({ job, onClose, onOpenAuth
 
                 <div className="details-form-group">
                   <label className="details-form-label">Relevant Experience Summary</label>
-                  <textarea 
+                  <textarea
                     required
                     placeholder="Summarize your credentials, certifications, or past projects..."
                     value={experienceSummary}
@@ -312,7 +312,7 @@ export const JobDetails: React.FC<JobDetailsProps> = ({ job, onClose, onOpenAuth
                   />
                 </div>
 
-                <button 
+                <button
                   type="submit"
                   disabled={submitting}
                   className="btn-details-submit"

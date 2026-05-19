@@ -38,5 +38,11 @@ export async function request<T>(path: string, options: RequestInit = {}): Promi
     throw error;
   }
 
-  return json as ApiResponse<T>;
+  // If the response is already wrapped in a "data" property, return it as-is.
+  // Otherwise, wrap it in a "data" property to ensure consistency with the ApiResponse type.
+  if (json && typeof json === 'object' && 'data' in json) {
+    return json as ApiResponse<T>;
+  }
+
+  return { data: json } as ApiResponse<T>;
 }

@@ -27,7 +27,7 @@ export const App: React.FC = () => {
     max_budget: '',
     sort_by: 'newest'
   });
-  
+
   const [jobs, setJobs] = useState<Job[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
@@ -50,7 +50,7 @@ export const App: React.FC = () => {
         params.append('page', currentPage.toString());
 
         const response = await request<Job[]>(`/jobs?${params.toString()}`);
-        
+
         if (active) {
           setJobs(response.data);
           if (response.meta) {
@@ -112,16 +112,16 @@ export const App: React.FC = () => {
   return (
     <div className="app-wrapper">
       {/* Stick navbar header */}
-      <Header 
-        activeTab={activeTab} 
-        setActiveTab={setActiveTab} 
+      <Header
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
         onOpenAuth={(mode) => {
           if (mode === 'login') {
             setLoginOpen(true);
           } else {
             setRegisterOpen(true);
           }
-        }} 
+        }}
       />
 
       {/* Main layout container */}
@@ -129,18 +129,18 @@ export const App: React.FC = () => {
         {activeTab === 'jobs' ? (
           /* SECTION 1: Browse listings view */
           <div className="browse-layout">
-            
+
             {/* Sidebar filter controls */}
             <FilterSidebar filters={filters} onChange={handleFiltersChange} />
 
             {/* Main listing panel grid */}
             <div className="listing-panel">
-              
+
               {/* Active Filter Chips bar */}
-              <ActiveFilters 
-                filters={filters} 
-                onClearFilter={handleClearFilter} 
-                onClearAll={handleClearAllFilters} 
+              <ActiveFilters
+                filters={filters}
+                onClearFilter={handleClearFilter}
+                onClearAll={handleClearAllFilters}
               />
 
               {/* Title counters */}
@@ -171,7 +171,7 @@ export const App: React.FC = () => {
                       No jobs matching your filter criteria were found. Try relaxing your filters!
                     </p>
                   </div>
-                  <button 
+                  <button
                     onClick={handleClearAllFilters}
                     className="btn-listing-empty-action"
                   >
@@ -183,10 +183,10 @@ export const App: React.FC = () => {
                 <>
                   <div className="jobs-cards-grid">
                     {jobs.map((job) => (
-                      <JobCard 
-                        key={job.id} 
-                        job={job} 
-                        onClick={() => setSelectedJob(job)} 
+                      <JobCard
+                        key={job.id}
+                        job={job}
+                        onClick={() => setSelectedJob(job)}
                       />
                     ))}
                   </div>
@@ -228,29 +228,29 @@ export const App: React.FC = () => {
       </main>
 
       {/* Auth Login Modal */}
-      <LoginModal 
-        isOpen={loginOpen} 
-        onClose={() => setLoginOpen(false)} 
+      <LoginModal
+        isOpen={loginOpen}
+        onClose={() => setLoginOpen(false)}
         onSwitchToRegister={() => {
           setLoginOpen(false);
           setRegisterOpen(true);
-        }} 
+        }}
       />
 
       {/* Auth Registration Modal */}
-      <RegisterModal 
-        isOpen={registerOpen} 
-        onClose={() => setRegisterOpen(false)} 
+      <RegisterModal
+        isOpen={registerOpen}
+        onClose={() => setRegisterOpen(false)}
         onSwitchToLogin={() => {
           setRegisterOpen(false);
           setLoginOpen(true);
-        }} 
+        }}
       />
 
       {/* Right Slide Job Detail & Bid form drawer */}
-      <JobDetails 
-        job={selectedJob} 
-        onClose={() => setSelectedJob(null)} 
+      <JobDetails
+        job={selectedJob}
+        onClose={() => setSelectedJob(null)}
         onOpenAuth={(mode) => {
           if (mode === 'login') {
             setLoginOpen(true);
