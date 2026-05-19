@@ -37,6 +37,8 @@ class BidController extends Controller
             $request->validated()
         );
 
+        \Illuminate\Support\Facades\Cache::flush(); // Invalidate job listings cache
+
         return response()->json([
             'data' => new BidResource($bid),
         ], 201);
