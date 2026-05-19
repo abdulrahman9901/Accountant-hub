@@ -58,7 +58,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   useEffect(() => {
     let active = true;
-    
+
     const verify = async () => {
       if (!token) {
         if (active) setLoading(false);

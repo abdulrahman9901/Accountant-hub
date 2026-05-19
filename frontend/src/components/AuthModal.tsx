@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { request, ApiError } from '../api/client';
+import { request, type ApiError } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { X, Mail, Lock, User as UserIcon } from 'lucide-react';
 
