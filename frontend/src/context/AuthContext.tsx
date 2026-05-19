@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
-import { User } from '../types';
+import type { User } from '../types';
 import { request } from '../api/client';
 
 interface AuthContextType {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { request } from '../api/client';
-import { Category } from '../types';
+import type { Category } from '../types';
 import { Search, Sliders, ChevronDown } from 'lucide-react';
 
 export interface FilterState {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Job } from '../types';
+import type { Job } from '../types';
 import { Briefcase, Calendar, DollarSign, MessageSquare, Clock } from 'lucide-react';
 
 interface JobCardProps {
