@@ -68,18 +68,35 @@ This spins up the Backend (Laravel), Frontend (React via host), and Database (My
    ```bash
    docker-compose up -d --build
    ```
-2. Run database migrations & seeders:
-   *(Note: If this is a fresh clone, wait 20-30 seconds after step 1 for the automated `composer install` process inside the container to complete first).*
+   The containers will start and automatically install Composer dependencies. This may take 30-60 seconds on first run.
+
+2. Wait for backend to be ready (check when `vendor/autoload.php` exists):
+   
+   **On Windows (PowerShell):**
+   ```powershell
+   docker exec accountant_hub_api test -f vendor/autoload.php; if ($?) { Write-Host "✓ Backend ready" } else { Write-Host "⏳ Still installing..." }
+   ```
+   
+   **On Linux/Mac/WSL (Bash):**
+   ```bash
+   docker exec accountant_hub_api test -f vendor/autoload.php && echo "✓ Backend ready" || echo "⏳ Still installing..."
+   ```
+   
+   Repeat this command until you see `✓ Backend ready`.
+
+3. Run database migrations & seeders:
    ```bash
    docker exec accountant_hub_api php artisan migrate --seed --force
    ```
-3. Start React locally:
+
+4. Start React locally (in a new terminal):
    ```bash
    cd frontend
    npm install
    npm run dev
    ```
-4. Access the app at `http://localhost:5173`.
+
+5. Access the app at `http://localhost:5173`.
 
 ### 2. Production/Hugging Face Mode
 This builds and runs the entire app inside a **single unified container** mimicking the exact environment on Hugging Face Spaces.
