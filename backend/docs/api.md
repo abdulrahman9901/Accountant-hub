@@ -11,11 +11,11 @@ Base URL: `http://localhost:8000/api`
 | `/login` | POST | No | Done |
 | `/logout` | POST | Bearer | Done |
 | `/user` | GET | Bearer | Done |
-| `/categories` | GET | No | Planned |
-| `/jobs` | GET | No | Planned |
-| `/jobs/{id}` | GET | No | Planned |
-| `/jobs/{id}/bids` | POST | Bearer | Planned |
-| `/user/bids` | GET | Bearer | Planned |
+| `/categories` | GET | No | Done |
+| `/jobs` | GET | No | Done |
+| `/jobs/{id}` | GET | No | Done |
+| `/jobs/{id}/bids` | POST | Bearer | Done |
+| `/user/bids` | GET | Bearer | Done |
 
 ## Architecture
 
