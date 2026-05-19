@@ -1,0 +1,126 @@
+/* Job Card Container */
+.job-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.job-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary);
+}
+
+/* Color ribbon indicator on the left border */
+.job-card-ribbon {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+}
+
+.job-card-ribbon-open {
+  background-color: var(--primary);
+}
+
+.job-card-ribbon-closed {
+  background-color: var(--black);
+}
+
+/* Header section (Company, Title, Status badge) */
+.job-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.job-card-company {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.job-card-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--black);
+  letter-spacing: -0.02em;
+}
+
+.job-card-badge {
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.job-card-badge-open {
+  background-color: var(--primary-light);
+  color: var(--primary);
+}
+
+.job-card-badge-closed {
+  background-color: rgba(0, 0, 0, 0.06);
+  color: var(--black);
+}
+
+/* Short description with ellipsis clamp */
+.job-card-description {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  display: -webkit-box;
+  WebkitLineClamp: 2;
+  WebkitBoxOrient: vertical;
+  overflow: hidden;
+}
+
+/* Tags section */
+.job-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.job-card-tag-badge {
+  text-transform: capitalize;
+}
+
+/* Divider line */
+.job-card-divider {
+  height: 1px;
+  background-color: var(--border);
+}
+
+/* Footer Meta details */
+.job-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.job-card-footer-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.job-card-footer-icon {
+  color: var(--primary);
+}

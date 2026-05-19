@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Job } from '../types';
 import { Briefcase, Calendar, DollarSign, MessageSquare, Clock } from 'lucide-react';
+import './Jobs.css';
 
 interface JobCardProps {
   job: Job;
@@ -29,82 +30,35 @@ export const JobCard: React.FC<JobCardProps> = ({ job, onClick }) => {
   return (
     <article 
       onClick={onClick}
-      style={{
-        backgroundColor: 'var(--card-bg)',
-        border: '1px solid var(--border)',
-        borderRadius: 'var(--radius-md)',
-        padding: '24px',
-        cursor: 'pointer',
-        boxShadow: 'var(--shadow-sm)',
-        transition: 'var(--transition)',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '16px',
-        position: 'relative',
-        overflow: 'hidden'
-      }}
-      className="job-card-hover"
-      onMouseOver={(e) => {
-        e.currentTarget.style.transform = 'translateY(-4px)';
-        e.currentTarget.style.boxShadow = 'var(--shadow-md)';
-        e.currentTarget.style.borderColor = 'var(--primary)';
-      }}
-      onMouseOut={(e) => {
-        e.currentTarget.style.transform = 'none';
-        e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
-        e.currentTarget.style.borderColor = 'var(--border)';
-      }}
+      className="job-card"
     >
       {/* Dynamic left color ribbon */}
-      <div style={{
-        position: 'absolute',
-        left: 0,
-        top: 0,
-        bottom: 0,
-        width: '5px',
-        backgroundColor: isOpen ? 'var(--primary)' : 'var(--black)'
-      }} />
+      <div className={`job-card-ribbon ${isOpen ? 'job-card-ribbon-open' : 'job-card-ribbon-closed'}`} />
 
       {/* Header section (Company, Title, Status badge) */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px' }}>
+      <div className="job-card-header">
         <div>
-          <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>
+          <span className="job-card-company">
             {job.company_name}
           </span>
-          <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--black)', letterSpacing: '-0.02em' }}>
+          <h3 className="job-card-title">
             {job.title}
           </h3>
         </div>
-        <span 
-          className={`badge ${isOpen ? 'badge-primary' : 'badge-dark'}`}
-          style={{
-            backgroundColor: isOpen ? 'var(--primary-light)' : 'rgba(0,0,0,0.06)',
-            color: isOpen ? 'var(--primary)' : 'var(--black)',
-            fontWeight: 700,
-            flexShrink: 0
-          }}
-        >
+        <span className={`badge job-card-badge ${isOpen ? 'job-card-badge-open' : 'job-card-badge-closed'}`}>
           {isOpen ? 'Open' : 'Closed'}
         </span>
       </div>
 
       {/* Short description */}
-      <p style={{
-        fontSize: '0.9rem',
-        color: 'var(--text-muted)',
-        lineHeight: 1.6,
-        display: '-webkit-box',
-        WebkitLineClamp: 2,
-        WebkitBoxOrient: 'vertical',
-        overflow: 'hidden'
-      }}>
+      <p className="job-card-description">
         {job.description}
       </p>
 
       {/* Tags section */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+      <div className="job-card-tags">
         {job.category && (
-          <span className="badge badge-dark" style={{ textTransform: 'capitalize' }}>
+          <span className="badge badge-dark job-card-tag-badge">
             <Briefcase size={12} />
             {job.category.name}
           </span>
@@ -120,24 +74,15 @@ export const JobCard: React.FC<JobCardProps> = ({ job, onClick }) => {
       </div>
 
       {/* Divider */}
-      <div style={{ height: '1px', backgroundColor: 'var(--border)' }} />
+      <div className="job-card-divider" />
 
       {/* Footer Meta: Deadline and Posted date */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
-        gap: '12px',
-        fontSize: '0.8rem',
-        color: 'var(--text-muted)',
-        fontWeight: 500
-      }}>
-        <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <Calendar size={14} style={{ color: 'var(--primary)' }} />
+      <div className="job-card-footer">
+        <span className="job-card-footer-item">
+          <Calendar size={14} className="job-card-footer-icon" />
           Deadline: {formatDate(job.deadline)}
         </span>
-        <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+        <span className="job-card-footer-item">
           <Clock size={14} />
           Posted: {formatDate(job.posted_date)}
         </span>
