@@ -3,6 +3,7 @@ import type { Bid } from '../types';
 import { request } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { FileText, DollarSign, Calendar, Clock, RefreshCw } from 'lucide-react';
+import './BidDashboard.css';
 
 interface BidDashboardProps {
   onSelectJobId: (jobId: number) => void;
@@ -90,30 +91,16 @@ export const BidDashboard: React.FC<BidDashboardProps> = ({ onSelectJobId }) => 
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', width: '100%' }}>
+    <div className="dashboard-container">
       {/* Title block */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div>
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 700, letterSpacing: '-0.02em' }}>My Submitted Proposals</h2>
-          <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-            Track and monitor the status of all bids submitted to clients.
-          </p>
+      <div className="dashboard-header">
+        <div className="dashboard-title-wrap">
+          <h2>My Submitted Proposals</h2>
+          <p>Track and monitor the status of all bids submitted to clients.</p>
         </div>
         <button 
           onClick={fetchBids}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            backgroundColor: '#ffffff',
-            border: '1px solid var(--border)',
-            padding: '8px 16px',
-            borderRadius: 'var(--radius-sm)',
-            fontSize: '0.85rem',
-            fontWeight: 600,
-            cursor: 'pointer',
-            boxShadow: 'var(--shadow-sm)'
-          }}
+          className="btn-dashboard-refresh"
         >
           <RefreshCw size={14} />
           Refresh
@@ -122,82 +109,32 @@ export const BidDashboard: React.FC<BidDashboardProps> = ({ onSelectJobId }) => 
 
       {bids.length === 0 ? (
         /* Empty proposals fallback */
-        <div className="glass" style={{
-          backgroundColor: '#ffffff',
-          border: '1px solid var(--border)',
-          borderRadius: 'var(--radius-md)',
-          padding: '60px 24px',
-          textAlign: 'center',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '16px'
-        }}>
-          <div style={{
-            width: '64px',
-            height: '64px',
-            borderRadius: '50%',
-            backgroundColor: 'var(--primary-light)',
-            color: 'var(--primary)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}>
+        <div className="glass dashboard-empty-card">
+          <div className="dashboard-empty-icon-wrap">
             <FileText size={28} />
           </div>
           <div>
-            <h3 style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: '4px' }}>No Proposals Yet</h3>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', maxWidth: '360px', margin: '0 auto' }}>
+            <h3 className="dashboard-empty-title">No Proposals Yet</h3>
+            <p className="dashboard-empty-text">
               You haven't bid on any jobs yet. Visit the job board listings to submit your competitive offers!
             </p>
           </div>
         </div>
       ) : (
         /* List proposals */
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr',
-          gap: '16px'
-        }}>
+        <div className="dashboard-list-grid">
           {bids.map((bid) => {
             const hasJob = !!bid.job;
             return (
               <div 
                 key={bid.id}
-                style={{
-                  backgroundColor: '#ffffff',
-                  border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius-md)',
-                  padding: '20px 24px',
-                  boxShadow: 'var(--shadow-sm)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  flexWrap: 'wrap',
-                  gap: '16px',
-                  transition: 'var(--transition)'
-                }}
-                onMouseOver={(e) => { e.currentTarget.style.borderColor = 'var(--primary)'; }}
-                onMouseOut={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; }}
+                className="dashboard-bid-card"
               >
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1, minWidth: '240px' }}>
+                <div className="dashboard-bid-info">
                   {hasJob ? (
                     <button 
                       onClick={() => onSelectJobId(bid.job_id)}
-                      style={{
-                        fontSize: '1rem',
-                        fontWeight: 700,
-                        color: 'var(--black)',
-                        textAlign: 'left',
-                        cursor: 'pointer',
-                        letterSpacing: '-0.01em',
-                        transition: 'var(--transition)',
-                        background: 'none',
-                        border: 'none',
-                        padding: 0
-                      }}
-                      onMouseOver={(e) => e.currentTarget.style.color = 'var(--primary)'}
-                      onMouseOut={(e) => e.currentTarget.style.color = 'var(--black)'}
+                      className="btn-dashboard-job-link"
                     >
                       {bid.job?.title}
                     </button>
@@ -206,47 +143,39 @@ export const BidDashboard: React.FC<BidDashboardProps> = ({ onSelectJobId }) => 
                       Deleted Job Listing
                     </span>
                   )}
-                  <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 500 }}>
+                  <span className="dashboard-bid-client">
                     Client: {bid.job?.company_name || 'Anonymous'}
                   </span>
                 </div>
 
                 {/* Parameters */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '24px', flexWrap: 'wrap' }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                    <span style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-muted)' }}>
-                      Proposed Offer
-                    </span>
-                    <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--primary)', display: 'flex', alignItems: 'center' }}>
+                <div className="dashboard-bid-params">
+                  <div className="dashboard-param-block">
+                    <span className="dashboard-param-label">Proposed Offer</span>
+                    <span className="dashboard-param-value-budget">
                       <DollarSign size={14} />
                       {parseFloat(bid.proposed_price.toString()).toLocaleString()}
                     </span>
                   </div>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                    <span style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-muted)' }}>
-                      Delivery
-                    </span>
-                    <span style={{ fontSize: '0.9rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <div className="dashboard-param-block">
+                    <span className="dashboard-param-label">Delivery</span>
+                    <span className="dashboard-param-value">
                       <Calendar size={14} />
                       {bid.estimated_delivery_days} {bid.estimated_delivery_days === 1 ? 'Day' : 'Days'}
                     </span>
                   </div>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                    <span style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-muted)' }}>
-                      Submitted
-                    </span>
-                    <span style={{ fontSize: '0.85rem', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-muted)' }}>
+                  <div className="dashboard-param-block">
+                    <span className="dashboard-param-label">Submitted</span>
+                    <span className="dashboard-param-value-date">
                       <Clock size={12} />
                       {formatDate(bid.created_at)}
                     </span>
                   </div>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '2px' }}>
-                    <span style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-muted)' }}>
-                      Bid Status
-                    </span>
+                  <div className="dashboard-param-block">
+                    <span className="dashboard-param-label">Bid Status</span>
                     {getStatusBadge(bid.status)}
                   </div>
                 </div>
