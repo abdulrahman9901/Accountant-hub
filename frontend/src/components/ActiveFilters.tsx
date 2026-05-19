@@ -1,5 +1,5 @@
 import React from 'react';
-import { FilterState } from './FilterSidebar';
+import type { FilterState } from './FilterSidebar';
 import { X } from 'lucide-react';
 
 interface ActiveFiltersProps {
@@ -9,10 +9,10 @@ interface ActiveFiltersProps {
 }
 
 export const ActiveFilters: React.FC<ActiveFiltersProps> = ({ filters, onClearFilter, onClearAll }) => {
-  const hasActiveFilters = 
-    filters.search || 
-    filters.category || 
-    filters.min_budget || 
+  const hasActiveFilters =
+    filters.search ||
+    filters.category ||
+    filters.min_budget ||
     filters.max_budget;
 
   if (!hasActiveFilters) return null;
@@ -52,7 +52,7 @@ export const ActiveFilters: React.FC<ActiveFiltersProps> = ({ filters, onClearFi
             fontWeight: 600
           }}>
             Search: "{filters.search}"
-            <button 
+            <button
               onClick={() => onClearFilter('search')}
               style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', color: 'var(--primary)' }}
             >
@@ -76,7 +76,7 @@ export const ActiveFilters: React.FC<ActiveFiltersProps> = ({ filters, onClearFi
             textTransform: 'capitalize'
           }}>
             Category: {filters.category.replace('-', ' ')}
-            <button 
+            <button
               onClick={() => onClearFilter('category')}
               style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', color: 'var(--primary)' }}
             >
@@ -99,7 +99,7 @@ export const ActiveFilters: React.FC<ActiveFiltersProps> = ({ filters, onClearFi
             fontWeight: 600
           }}>
             Min: ${filters.min_budget}
-            <button 
+            <button
               onClick={() => onClearFilter('min_budget')}
               style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', color: 'var(--primary)' }}
             >
@@ -122,7 +122,7 @@ export const ActiveFilters: React.FC<ActiveFiltersProps> = ({ filters, onClearFi
             fontWeight: 600
           }}>
             Max: ${filters.max_budget}
-            <button 
+            <button
               onClick={() => onClearFilter('max_budget')}
               style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', color: 'var(--primary)' }}
             >
@@ -133,7 +133,7 @@ export const ActiveFilters: React.FC<ActiveFiltersProps> = ({ filters, onClearFi
       </div>
 
       {/* Clear Trigger */}
-      <button 
+      <button
         onClick={onClearAll}
         style={{
           fontSize: '0.8rem',
