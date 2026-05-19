@@ -10,9 +10,12 @@ import { RegisterModal } from './components/RegisterModal';
 import { request } from './api/client';
 import type { Job } from './types';
 import { Briefcase, ChevronLeft, ChevronRight, Sliders, RefreshCw } from 'lucide-react';
+import { useAuth } from './context/AuthContext';
 import './styles/App.css';
 
 export const App: React.FC = () => {
+  const { token } = useAuth();
+  
   // Navigation layout state
   const [activeTab, setActiveTab] = useState<'jobs' | 'dashboard'>('jobs');
   const [loginOpen, setLoginOpen] = useState(false);
@@ -69,7 +72,13 @@ export const App: React.FC = () => {
     return () => {
       active = false;
     };
-  }, [filters, currentPage, refreshTrigger]);
+  }, [filters, currentPage, refreshTrigger, token]);
+
+  // Clear selection and reset pagination on login/logout state transitions
+  useEffect(() => {
+    setSelectedJob(null);
+    setCurrentPage(1);
+  }, [token]);
 
   // Synchronous filter update handlers that reset pagination page safely
   const handleFiltersChange = useCallback((newFilters: FilterState) => {
