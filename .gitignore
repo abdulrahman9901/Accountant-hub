@@ -5,7 +5,7 @@ Thumbs.db
 .vscode/
 *.swp
 *.swo
-
+*.md 
 # --- Local secrets & env ---
 .env
 .env.*
