@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\BidController;
 use App\Http\Controllers\Api\JobCategoryController;
 use App\Http\Controllers\Api\JobController;
 use Illuminate\Support\Facades\Route;
@@ -24,4 +25,5 @@ Route::get('/jobs/{id}', [JobController::class, 'show']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'user']);
+    Route::post('/jobs/{id}/bids', [BidController::class, 'store']);
 });
