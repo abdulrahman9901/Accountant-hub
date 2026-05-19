@@ -5,7 +5,8 @@ import { ActiveFilters } from './components/ActiveFilters';
 import { JobCard } from './components/JobCard';
 import { JobDetails } from './components/JobDetails';
 import { BidDashboard } from './components/BidDashboard';
-import { AuthModal } from './components/AuthModal';
+import { LoginModal } from './components/LoginModal';
+import { RegisterModal } from './components/RegisterModal';
 import { request } from './api/client';
 import type { Job } from './types';
 import { Briefcase, ChevronLeft, ChevronRight, Sliders, RefreshCw } from 'lucide-react';
@@ -13,8 +14,8 @@ import { Briefcase, ChevronLeft, ChevronRight, Sliders, RefreshCw } from 'lucide
 export const App: React.FC = () => {
   // Navigation layout state
   const [activeTab, setActiveTab] = useState<'jobs' | 'dashboard'>('jobs');
-  const [authOpen, setAuthOpen] = useState(false);
-  const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
+  const [loginOpen, setLoginOpen] = useState(false);
+  const [registerOpen, setRegisterOpen] = useState(false);
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
 
   // Job Listing filters and listings state
@@ -114,8 +115,11 @@ export const App: React.FC = () => {
         activeTab={activeTab} 
         setActiveTab={setActiveTab} 
         onOpenAuth={(mode) => {
-          setAuthMode(mode);
-          setAuthOpen(true);
+          if (mode === 'login') {
+            setLoginOpen(true);
+          } else {
+            setRegisterOpen(true);
+          }
         }} 
       />
 
@@ -290,11 +294,24 @@ export const App: React.FC = () => {
         )}
       </main>
 
-      {/* Auth Login/Registration Dialog Modal */}
-      <AuthModal 
-        isOpen={authOpen} 
-        onClose={() => setAuthOpen(false)} 
-        initialMode={authMode} 
+      {/* Auth Login Modal */}
+      <LoginModal 
+        isOpen={loginOpen} 
+        onClose={() => setLoginOpen(false)} 
+        onSwitchToRegister={() => {
+          setLoginOpen(false);
+          setRegisterOpen(true);
+        }} 
+      />
+
+      {/* Auth Registration Modal */}
+      <RegisterModal 
+        isOpen={registerOpen} 
+        onClose={() => setRegisterOpen(false)} 
+        onSwitchToLogin={() => {
+          setRegisterOpen(false);
+          setLoginOpen(true);
+        }} 
       />
 
       {/* Right Slide Job Detail & Bid form drawer */}
@@ -303,8 +320,11 @@ export const App: React.FC = () => {
         job={selectedJob} 
         onClose={() => setSelectedJob(null)} 
         onOpenAuth={(mode) => {
-          setAuthMode(mode);
-          setAuthOpen(true);
+          if (mode === 'login') {
+            setLoginOpen(true);
+          } else {
+            setRegisterOpen(true);
+          }
         }}
         onBidSuccess={handleBidSuccess}
       />
