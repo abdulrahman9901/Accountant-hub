@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { request } from '../api/client';
 import type { Category } from '../types';
 import { Search, Sliders, ChevronDown } from 'lucide-react';
-import './FilterSidebar.css';
+import '../styles/FilterSidebar.css';
 
 
 export interface FilterState {

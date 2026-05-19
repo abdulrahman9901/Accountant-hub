@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Job } from '../types';
 import { Briefcase, Calendar, DollarSign, MessageSquare, Clock } from 'lucide-react';
-import './Jobs.css';
+import '../styles/Jobs.css';
 
 interface JobCardProps {
   job: Job;

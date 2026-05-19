@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Briefcase, LayoutDashboard, LogOut, User as UserIcon, Menu, X } from 'lucide-react';
-import './Header.css';
+import '../styles/Header.css';
 
 interface HeaderProps {
   onOpenAuth: (mode: 'login' | 'register') => void;

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { request, type ApiError } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { X, Mail, Lock, User as UserIcon } from 'lucide-react';
-import './AuthModals.css';
+import '../styles/AuthModals.css';
 
 
 

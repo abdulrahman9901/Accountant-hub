@@ -1,7 +1,7 @@
 import React from 'react';
 import type { FilterState } from './FilterSidebar';
 import { X } from 'lucide-react';
-import './ActiveFilters.css';
+import '../styles/ActiveFilters.css';
 
 interface ActiveFiltersProps {
   filters: FilterState;

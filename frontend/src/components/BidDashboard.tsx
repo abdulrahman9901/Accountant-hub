@@ -3,7 +3,7 @@ import type { Bid } from '../types';
 import { request } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { FileText, DollarSign, Calendar, Clock, RefreshCw } from 'lucide-react';
-import './BidDashboard.css';
+import '../styles/BidDashboard.css';
 
 interface BidDashboardProps {
   onSelectJobId: (jobId: number) => void;

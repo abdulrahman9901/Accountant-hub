@@ -3,7 +3,7 @@ import type { Job, Bid } from '../types';
 import { request, type ApiError } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { X, DollarSign, Calendar, Paperclip, CheckCircle } from 'lucide-react';
-import './JobDetails.css';
+import '../styles/JobDetails.css';
 
 interface JobDetailsProps {
   job: Job | null;

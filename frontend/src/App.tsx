@@ -10,7 +10,7 @@ import { RegisterModal } from './components/RegisterModal';
 import { request } from './api/client';
 import type { Job } from './types';
 import { Briefcase, ChevronLeft, ChevronRight, Sliders, RefreshCw } from 'lucide-react';
-import './App.css';
+import './styles/App.css';
 
 export const App: React.FC = () => {
   // Navigation layout state
