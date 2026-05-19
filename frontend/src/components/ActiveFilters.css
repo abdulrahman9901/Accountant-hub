@@ -1,0 +1,71 @@
+.active-filters-container {
+  padding: 12px 24px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  background-color: #ffffff;
+  margin-top: -24px;
+  margin-bottom: 24px;
+  z-index: 10;
+  position: relative;
+}
+
+.active-filters-list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.active-filters-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.active-filter-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--primary-light);
+  color: var(--primary);
+  padding: 4px 8px 4px 10px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.chip-dismiss-btn {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: var(--primary);
+  background: none;
+  border: none;
+  padding: 0;
+  transition: var(--transition);
+}
+
+.chip-dismiss-btn:hover {
+  transform: scale(1.1);
+}
+
+.active-filters-clear-btn {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--primary);
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  transition: var(--transition);
+}
+
+.active-filters-clear-btn:hover {
+  color: var(--primary-hover);
+}

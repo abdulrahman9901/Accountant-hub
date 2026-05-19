@@ -1,6 +1,7 @@
 import React from 'react';
 import type { FilterState } from './FilterSidebar';
 import { X } from 'lucide-react';
+import './ActiveFilters.css';
 
 interface ActiveFiltersProps {
   filters: FilterState;
@@ -18,43 +19,19 @@ export const ActiveFilters: React.FC<ActiveFiltersProps> = ({ filters, onClearFi
   if (!hasActiveFilters) return null;
 
   return (
-    <div className="glass" style={{
-      padding: '12px 24px',
-      borderRadius: 'var(--radius-md)',
-      boxShadow: 'var(--shadow-sm)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      flexWrap: 'wrap',
-      gap: '12px',
-      backgroundColor: '#ffffff',
-      marginTop: '-24px',
-      marginBottom: '24px',
-      zIndex: 10,
-      position: 'relative'
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
-        <span style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-muted)' }}>
+    <div className="glass active-filters-container">
+      <div className="active-filters-list">
+        <span className="active-filters-title">
           Active:
         </span>
 
         {/* 1. Keyword search chip */}
         {filters.search && (
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            backgroundColor: 'var(--primary-light)',
-            color: 'var(--primary)',
-            padding: '4px 8px 4px 10px',
-            borderRadius: '4px',
-            fontSize: '0.8rem',
-            fontWeight: 600
-          }}>
+          <div className="active-filter-chip">
             Search: "{filters.search}"
             <button
               onClick={() => onClearFilter('search')}
-              style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', color: 'var(--primary)' }}
+              className="chip-dismiss-btn"
             >
               <X size={14} />
             </button>
@@ -63,22 +40,11 @@ export const ActiveFilters: React.FC<ActiveFiltersProps> = ({ filters, onClearFi
 
         {/* 2. Category chip */}
         {filters.category && (
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            backgroundColor: 'var(--primary-light)',
-            color: 'var(--primary)',
-            padding: '4px 8px 4px 10px',
-            borderRadius: '4px',
-            fontSize: '0.8rem',
-            fontWeight: 600,
-            textTransform: 'capitalize'
-          }}>
+          <div className="active-filter-chip" style={{ textTransform: 'capitalize' }}>
             Category: {filters.category.replace('-', ' ')}
             <button
               onClick={() => onClearFilter('category')}
-              style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', color: 'var(--primary)' }}
+              className="chip-dismiss-btn"
             >
               <X size={14} />
             </button>
@@ -87,21 +53,11 @@ export const ActiveFilters: React.FC<ActiveFiltersProps> = ({ filters, onClearFi
 
         {/* 3. Min budget chip */}
         {filters.min_budget && (
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            backgroundColor: 'var(--primary-light)',
-            color: 'var(--primary)',
-            padding: '4px 8px 4px 10px',
-            borderRadius: '4px',
-            fontSize: '0.8rem',
-            fontWeight: 600
-          }}>
+          <div className="active-filter-chip">
             Min: ${filters.min_budget}
             <button
               onClick={() => onClearFilter('min_budget')}
-              style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', color: 'var(--primary)' }}
+              className="chip-dismiss-btn"
             >
               <X size={14} />
             </button>
@@ -110,21 +66,11 @@ export const ActiveFilters: React.FC<ActiveFiltersProps> = ({ filters, onClearFi
 
         {/* 4. Max budget chip */}
         {filters.max_budget && (
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            backgroundColor: 'var(--primary-light)',
-            color: 'var(--primary)',
-            padding: '4px 8px 4px 10px',
-            borderRadius: '4px',
-            fontSize: '0.8rem',
-            fontWeight: 600
-          }}>
+          <div className="active-filter-chip">
             Max: ${filters.max_budget}
             <button
               onClick={() => onClearFilter('max_budget')}
-              style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', color: 'var(--primary)' }}
+              className="chip-dismiss-btn"
             >
               <X size={14} />
             </button>
@@ -135,12 +81,7 @@ export const ActiveFilters: React.FC<ActiveFiltersProps> = ({ filters, onClearFi
       {/* Clear Trigger */}
       <button
         onClick={onClearAll}
-        style={{
-          fontSize: '0.8rem',
-          fontWeight: 700,
-          color: 'var(--primary)',
-          cursor: 'pointer'
-        }}
+        className="active-filters-clear-btn"
       >
         Clear All
       </button>

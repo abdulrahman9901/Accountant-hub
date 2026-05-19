@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { request } from '../api/client';
 import type { Category } from '../types';
 import { Search, Sliders, ChevronDown } from 'lucide-react';
+import './FilterSidebar.css';
+
 
 export interface FilterState {
   search: string;
@@ -113,132 +115,76 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, onChange 
   };
 
   return (
-    <aside style={{
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '24px',
-      width: '100%',
-      maxWidth: '300px'
-    }} className="desktop-only">
+    <aside className="desktop-only filter-sidebar-aside">
       {/* Header filter title */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        borderBottom: '1px solid var(--border)',
-        paddingBottom: '12px'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700 }}>
+      <div className="filter-sidebar-header">
+        <div className="filter-sidebar-title">
           <Sliders size={18} style={{ color: 'var(--primary)' }} />
           Filters
         </div>
         <button 
           onClick={handleReset}
-          style={{
-            fontSize: '0.8rem',
-            fontWeight: 600,
-            color: 'var(--primary)',
-            cursor: 'pointer',
-            border: 'none',
-            background: 'none',
-            padding: 0
-          }}
+          className="filter-sidebar-reset-btn"
         >
           Reset All
         </button>
       </div>
 
       {/* 1. Search Box */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-        <label style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Search Jobs</label>
-        <div style={{ position: 'relative' }}>
-          <Search size={16} style={{ position: 'absolute', left: '12px', top: '13px', color: 'var(--text-muted)' }} />
+      <div className="filter-group">
+        <label className="filter-label">Search Jobs</label>
+        <div className="filter-input-relative">
+          <Search size={16} className="filter-search-icon" />
           <input 
             type="text"
             placeholder="Title or keywords..."
             value={searchVal}
             onChange={(e) => setSearchVal(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '10px 12px 10px 36px',
-              borderRadius: 'var(--radius-sm)',
-              border: '1px solid var(--border)',
-              fontSize: '0.85rem',
-              backgroundColor: '#ffffff',
-              transition: 'var(--transition)'
-            }}
-            onFocus={(e) => e.target.style.borderColor = 'var(--primary)'}
-            onBlur={(e) => e.target.style.borderColor = 'var(--border)'}
+            className="filter-search-input"
           />
         </div>
       </div>
 
       {/* 2. Sorting */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-        <label style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Sort Listings</label>
-        <div style={{ position: 'relative' }}>
+      <div className="filter-group">
+        <label className="filter-label">Sort Listings</label>
+        <div className="filter-input-relative">
           <select 
             value={filters.sort_by}
             onChange={handleSortChange}
-            style={{
-              width: '100%',
-              padding: '10px 32px 10px 12px',
-              borderRadius: 'var(--radius-sm)',
-              border: '1px solid var(--border)',
-              fontSize: '0.85rem',
-              backgroundColor: '#ffffff',
-              appearance: 'none',
-              cursor: 'pointer',
-              fontWeight: 500
-            }}
+            className="filter-select"
           >
             <option value="newest">Newest Posted</option>
             <option value="highest_budget">Highest Budget</option>
             <option value="deadline">Closest Deadline</option>
           </select>
-          <ChevronDown size={16} style={{ position: 'absolute', right: '12px', top: '13px', pointerEvents: 'none', color: 'var(--text-muted)' }} />
+          <ChevronDown size={16} className="filter-select-arrow" />
         </div>
       </div>
 
       {/* 3. Categories list */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-        <label style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Categories</label>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+      <div className="filter-group">
+        <label className="filter-label" style={{ marginBottom: '2px' }}>Categories</label>
+        <div className="filter-categories-list">
           {categories.map((cat) => {
             const isChecked = filters.category === cat.slug;
             return (
               <button
                 key={cat.id}
                 onClick={() => handleCategorySelect(cat.slug)}
+                className="category-filter-btn"
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  textAlign: 'left',
-                  fontSize: '0.85rem',
                   fontWeight: isChecked ? 600 : 400,
-                  color: isChecked ? 'var(--primary)' : 'var(--text-muted)',
-                  cursor: 'pointer',
-                  padding: '4px 0',
-                  transition: 'var(--transition)',
-                  border: 'none',
-                  background: 'none'
+                  color: isChecked ? 'var(--primary)' : 'var(--text-muted)'
                 }}
               >
-                <div style={{
-                  width: '16px',
-                  height: '16px',
-                  borderRadius: '3px',
-                  border: isChecked ? '2px solid var(--primary)' : '1px solid var(--border)',
-                  backgroundColor: isChecked ? 'var(--primary)' : '#ffffff',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#ffffff',
-                  fontSize: '0.6rem',
-                  fontWeight: 'bold',
-                  transition: 'var(--transition)'
-                }}>
+                <div 
+                  className="category-filter-checkbox"
+                  style={{
+                    border: isChecked ? '2px solid var(--primary)' : '1px solid var(--border)',
+                    backgroundColor: isChecked ? 'var(--primary)' : '#ffffff'
+                  }}
+                >
                   {isChecked && '✓'}
                 </div>
                 {cat.name}
@@ -249,40 +195,27 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, onChange 
       </div>
 
       {/* 4. Budgets range */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-        <label style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Budget Range ($)</label>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <div className="filter-group">
+        <label className="filter-label">Budget Range ($)</label>
+        <div className="budget-range-row">
           <input 
             type="number"
             placeholder="Min"
             value={minVal}
             onChange={(e) => setMinVal(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '10px',
-              borderRadius: 'var(--radius-sm)',
-              border: '1px solid var(--border)',
-              fontSize: '0.85rem',
-              textAlign: 'center'
-            }}
+            className="budget-input"
           />
-          <span style={{ color: 'var(--text-muted)' }}>-</span>
+          <span className="budget-separator">-</span>
           <input 
             type="number"
             placeholder="Max"
             value={maxVal}
             onChange={(e) => setMaxVal(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '10px',
-              borderRadius: 'var(--radius-sm)',
-              border: '1px solid var(--border)',
-              fontSize: '0.85rem',
-              textAlign: 'center'
-            }}
+            className="budget-input"
           />
         </div>
       </div>
     </aside>
   );
 };
+
