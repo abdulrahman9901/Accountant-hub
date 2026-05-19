@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { request, type ApiError } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { X, Mail, Lock } from 'lucide-react';
+import './AuthModals.css';
+
+
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -56,127 +59,68 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSwitc
   };
 
   return (
-    <div style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: 'rgba(0, 0, 0, 0.6)',
-      backdropFilter: 'blur(4px)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 200,
-      padding: '20px'
-    }}>
-      <div className="glass" style={{
-        width: '100%',
-        maxWidth: '440px',
-        borderRadius: 'var(--radius-lg)',
-        boxShadow: 'var(--shadow-lg)',
-        backgroundColor: '#ffffff',
-        overflow: 'hidden',
-        position: 'relative'
-      }}>
+    <div className="auth-backdrop">
+      <div className="glass auth-modal-card">
         {/* Close Button */}
         <button 
           onClick={onClose}
-          style={{
-            position: 'absolute',
-            top: '20px',
-            right: '20px',
-            cursor: 'pointer',
-            color: 'var(--text-muted)',
-            transition: 'var(--transition)',
-            background: 'none',
-            border: 'none',
-            padding: 0
-          }}
-          onMouseOver={(e) => e.currentTarget.style.color = 'var(--black)'}
-          onMouseOut={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
+          className="auth-modal-close-btn"
         >
           <X size={20} />
         </button>
 
         {/* Modal Form Content */}
-        <form onSubmit={handleSubmit} style={{ padding: '32px 32px 24px 32px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <form onSubmit={handleSubmit} className="auth-form">
           <div>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: 700, letterSpacing: '-0.02em', marginBottom: '6px' }}>
+            <h2 className="auth-title">
               Welcome back
             </h2>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+            <p className="auth-subtitle">
               Access your dashboard and apply to accounting postings.
             </p>
           </div>
 
           {errorMessage && (
-            <div style={{
-              backgroundColor: '#fee2e2',
-              border: '1px solid #fca5a5',
-              padding: '12px',
-              borderRadius: 'var(--radius-sm)',
-              color: '#991b1b',
-              fontSize: '0.85rem',
-              fontWeight: 500
-            }}>
+            <div className="auth-error-banner">
               {errorMessage}
             </div>
           )}
 
           {/* Email Field */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            <label style={{ fontSize: '0.8rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Email Address</label>
-            <div style={{ position: 'relative' }}>
-              <Mail size={16} style={{ position: 'absolute', left: '12px', top: '14px', color: 'var(--text-muted)' }} />
+          <div className="auth-field-group">
+            <label className="auth-input-label">Email Address</label>
+            <div className="auth-input-relative">
               <input 
                 type="email"
                 required
                 placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '12px 12px 12px 38px',
-                  borderRadius: 'var(--radius-sm)',
-                  border: '1px solid var(--border)',
-                  fontSize: '0.9rem',
-                  transition: 'var(--transition)'
-                }}
-                onFocus={(e) => e.target.style.borderColor = 'var(--primary)'}
-                onBlur={(e) => e.target.style.borderColor = 'var(--border)'}
+                className="auth-input-field"
               />
+              <Mail size={16} className="auth-input-icon" />
             </div>
             {validationErrors.email && (
-              <span style={{ fontSize: '0.75rem', color: '#dc2626', fontWeight: 500 }}>{validationErrors.email[0]}</span>
+              <span className="auth-validation-error">{validationErrors.email[0]}</span>
             )}
           </div>
 
           {/* Password Field */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            <label style={{ fontSize: '0.8rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Password</label>
-            <div style={{ position: 'relative' }}>
-              <Lock size={16} style={{ position: 'absolute', left: '12px', top: '14px', color: 'var(--text-muted)' }} />
+          <div className="auth-field-group">
+            <label className="auth-input-label">Password</label>
+            <div className="auth-input-relative">
               <input 
                 type="password"
                 required
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '12px 12px 12px 38px',
-                  borderRadius: 'var(--radius-sm)',
-                  border: '1px solid var(--border)',
-                  fontSize: '0.9rem',
-                  transition: 'var(--transition)'
-                }}
-                onFocus={(e) => e.target.style.borderColor = 'var(--primary)'}
-                onBlur={(e) => e.target.style.borderColor = 'var(--border)'}
+                className="auth-input-field"
               />
+              <Lock size={16} className="auth-input-icon" />
             </div>
             {validationErrors.password && (
-              <span style={{ fontSize: '0.75rem', color: '#dc2626', fontWeight: 500 }}>{validationErrors.password[0]}</span>
+              <span className="auth-validation-error">{validationErrors.password[0]}</span>
             )}
           </div>
 
@@ -184,49 +128,18 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSwitc
           <button 
             type="submit"
             disabled={loading}
-            style={{
-              backgroundColor: 'var(--primary)',
-              color: '#ffffff',
-              padding: '14px',
-              borderRadius: 'var(--radius-sm)',
-              fontSize: '0.95rem',
-              fontWeight: 600,
-              cursor: 'pointer',
-              transition: 'var(--transition)',
-              boxShadow: '0 4px 12px rgba(1, 154, 81, 0.2)',
-              marginTop: '10px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              border: 'none'
-            }}
-            onMouseOver={(e) => { if (!loading) e.currentTarget.style.backgroundColor = 'var(--primary-hover)'; }}
-            onMouseOut={(e) => { if (!loading) e.currentTarget.style.backgroundColor = 'var(--primary)'; }}
+            className="btn-auth-submit"
           >
             {loading ? 'Processing...' : 'Sign In'}
           </button>
         </form>
 
         {/* Modal Footer Link */}
-        <div style={{
-          padding: '20px 32px',
-          borderTop: '1px solid var(--border)',
-          backgroundColor: '#fafbfc',
-          textAlign: 'center',
-          fontSize: '0.85rem',
-          color: 'var(--text-muted)'
-        }}>
+        <div className="auth-footer">
           Don't have an account?{' '}
           <button 
             onClick={() => { resetForm(); onSwitchToRegister(); }}
-            style={{
-              color: 'var(--primary)',
-              fontWeight: 600,
-              cursor: 'pointer',
-              background: 'none',
-              border: 'none',
-              padding: 0
-            }}
+            className="auth-footer-link-btn"
           >
             Create an Account
           </button>
