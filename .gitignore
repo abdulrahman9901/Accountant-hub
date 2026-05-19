@@ -6,6 +6,7 @@ Thumbs.db
 *.swp
 *.swo
 *.md 
+!README.md
 # --- Local secrets & env ---
 .env
 .env.*
