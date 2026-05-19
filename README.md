@@ -69,8 +69,9 @@ This spins up the Backend (Laravel), Frontend (React via host), and Database (My
    docker-compose up -d --build
    ```
 2. Run database migrations & seeders:
+   *(Note: If this is a fresh clone, wait 20-30 seconds after step 1 for the automated `composer install` process inside the container to complete first).*
    ```bash
-   docker exec accountant_hub_api php artisan migrate --seed
+   docker exec accountant_hub_api php artisan migrate --seed --force
    ```
 3. Start React locally:
    ```bash
