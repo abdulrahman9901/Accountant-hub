@@ -17,7 +17,9 @@ services:
       retries: 10
 
   api:
-    image: php:8.4-cli
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     container_name: accountant_hub_api
     working_dir: /app
     restart: unless-stopped
@@ -37,9 +39,7 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-    command: >
-      bash -c "docker-php-ext-install pdo_mysql > /dev/null 2>&1
-      && php artisan serve --host=0.0.0.0 --port=8000"
+    command: php artisan serve --host=0.0.0.0 --port=8000
 
 volumes:
   accountant_hub_mysql_data:
