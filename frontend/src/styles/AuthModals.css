@@ -21,12 +21,25 @@
   animation: fadeIn 0.25s ease-out;
 }
 
+.auth-backdrop.is-closing {
+  animation: fadeOut 0.25s ease-in forwards;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
   }
   to {
     opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
   }
 }
 
@@ -43,6 +56,10 @@
   animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+.auth-modal-card.is-closing {
+  animation: slideDown 0.25s ease-in forwards;
+}
+
 @keyframes slideUp {
   from {
     transform: translateY(24px);
@@ -51,6 +68,17 @@
   to {
     transform: translateY(0);
     opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(24px);
+    opacity: 0;
   }
 }
 

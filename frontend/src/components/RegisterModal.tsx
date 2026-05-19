@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { request, type ApiError } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { X, Mail, Lock, User as UserIcon } from 'lucide-react';
 import '../styles/AuthModals.css';
-
-
 
 interface RegisterModalProps {
   isOpen: boolean;
@@ -15,6 +13,11 @@ interface RegisterModalProps {
 export const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onSwitchToLogin }) => {
   const { login } = useAuth();
   
+  // Transition closing states - adjusted during render to avoid cascading effect lints
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
+  const [render, setRender] = useState(isOpen);
+  const [isClosing, setIsClosing] = useState(false);
+
   // Form input states
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -26,7 +29,26 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, o
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [validationErrors, setValidationErrors] = useState<Record<string, string[]>>({});
 
-  if (!isOpen) return null;
+  if (isOpen !== prevIsOpen) {
+    setPrevIsOpen(isOpen);
+    if (isOpen) {
+      setRender(true);
+      setIsClosing(false);
+    } else {
+      setIsClosing(true);
+    }
+  }
+
+  useEffect(() => {
+    if (isClosing) {
+      const timer = setTimeout(() => {
+        setRender(false);
+      }, 250);
+      return () => clearTimeout(timer);
+    }
+  }, [isClosing]);
+
+  if (!render) return null;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -68,8 +90,11 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, o
   };
 
   return (
-    <div className="auth-backdrop">
-      <div className="glass auth-modal-card">
+    <div className={`auth-backdrop ${isClosing ? 'is-closing' : ''}`}>
+      {/* Backdrop click close */}
+      <div onClick={onClose} style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, cursor: 'pointer' }} />
+
+      <div className={`glass auth-modal-card ${isClosing ? 'is-closing' : ''}`}>
         {/* Close Button */}
         <button 
           onClick={onClose}
@@ -192,3 +217,5 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, o
     </div>
   );
 };
+
+export default RegisterModal;

@@ -15,6 +15,11 @@ interface JobDetailsProps {
 export const JobDetails: React.FC<JobDetailsProps> = ({ job, onClose, onOpenAuth, onBidSuccess }) => {
   const { token } = useAuth();
   
+  // Transition closing states - adjusted during render to avoid cascading effect lints
+  const [prevJob, setPrevJob] = useState<Job | null>(job);
+  const [renderJob, setRenderJob] = useState<Job | null>(job);
+  const [isClosing, setIsClosing] = useState(false);
+
   // Form input states
   const [price, setPrice] = useState('');
   const [deliveryDays, setDeliveryDays] = useState('');
@@ -28,13 +33,38 @@ export const JobDetails: React.FC<JobDetailsProps> = ({ job, onClose, onOpenAuth
 
   // Errors parsing
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [validationErrors, setValidationErrors] = useState<Record<string, string[]>>({});
+
+  if (job !== prevJob) {
+    setPrevJob(job);
+    if (job) {
+      setRenderJob(job);
+      setIsClosing(false);
+      // Reset input form states when a new job is selected
+      setPrice('');
+      setDeliveryDays('');
+      setCoverLetter('');
+      setExperienceSummary('');
+      setSuccess(false);
+      setErrorMessage(null);
+    } else {
+      setIsClosing(true);
+    }
+  }
+
+  useEffect(() => {
+    if (isClosing) {
+      const timer = setTimeout(() => {
+        setRenderJob(null);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [isClosing]);
 
   // Check if user already bid on this job
   useEffect(() => {
     let active = true;
 
-    if (!job || !token) {
+    if (!renderJob || !token) {
       return;
     }
 
@@ -42,7 +72,7 @@ export const JobDetails: React.FC<JobDetailsProps> = ({ job, onClose, onOpenAuth
       try {
         const response = await request<Bid[]>('/user/bids');
         if (active) {
-          const match = response.data.some((bid) => bid.job_id === job.id);
+          const match = response.data.some((bid) => bid.job_id === renderJob.id);
           setAlreadyBid(match);
         }
       } catch (err) {
@@ -55,18 +85,17 @@ export const JobDetails: React.FC<JobDetailsProps> = ({ job, onClose, onOpenAuth
     return () => {
       active = false;
     };
-  }, [job, token, success]);
+  }, [renderJob, token, success]);
 
-  if (!job) return null;
+  if (!renderJob) return null;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitting(true);
     setErrorMessage(null);
-    setValidationErrors({});
 
     try {
-      await request<Bid>(`/jobs/${job.id}/bids`, {
+      await request<Bid>(`/jobs/${renderJob.id}/bids`, {
         method: 'POST',
         body: JSON.stringify({
           proposed_price: parseFloat(price),
@@ -81,9 +110,6 @@ export const JobDetails: React.FC<JobDetailsProps> = ({ job, onClose, onOpenAuth
     } catch (err) {
       const apiErr = err as ApiError;
       setErrorMessage(apiErr.message || 'Failed to submit proposal. Please review errors below.');
-      if (apiErr.errors) {
-        setValidationErrors(apiErr.errors);
-      }
     } finally {
       setSubmitting(false);
     }
@@ -91,8 +117,9 @@ export const JobDetails: React.FC<JobDetailsProps> = ({ job, onClose, onOpenAuth
 
   // Format budget range
   const formatBudget = () => {
-    const min = parseFloat(job.budget_min.toString()).toLocaleString();
-    const max = parseFloat(job.budget_max.toString()).toLocaleString();
+    if (!renderJob) return '';
+    const min = parseFloat(renderJob.budget_min.toString()).toLocaleString();
+    const max = parseFloat(renderJob.budget_max.toString()).toLocaleString();
     return `$${min} - $${max}`;
   };
 
@@ -106,18 +133,18 @@ export const JobDetails: React.FC<JobDetailsProps> = ({ job, onClose, onOpenAuth
   };
 
   return (
-    <div className="details-backdrop">
+    <div className={`details-backdrop ${isClosing ? 'is-closing' : ''}`}>
       {/* Backdrop click close */}
       <div onClick={onClose} style={{ flex: 1, cursor: 'pointer' }} />
 
       {/* Details Slide Drawer */}
-      <div className="glass details-drawer">
+      <div className={`glass details-drawer ${isClosing ? 'is-closing' : ''}`}>
         {/* Drawer Header */}
         <div className="details-drawer-header">
           <div className="details-drawer-badges">
-            <span className="badge badge-primary">{job.category?.name}</span>
+            <span className="badge badge-primary">{renderJob.category?.name}</span>
             <span className="badge badge-dark">
-              {job.status === 'open' ? 'Open' : 'Closed'}
+              {renderJob.status === 'open' ? 'Open' : 'Closed'}
             </span>
           </div>
           <button 
@@ -133,10 +160,10 @@ export const JobDetails: React.FC<JobDetailsProps> = ({ job, onClose, onOpenAuth
           {/* Job Overview */}
           <div className="details-job-header">
             <span className="details-job-company">
-              {job.company_name}
+              {renderJob.company_name}
             </span>
             <h2 className="details-job-title">
-              {job.title}
+              {renderJob.title}
             </h2>
           </div>
 
@@ -153,19 +180,19 @@ export const JobDetails: React.FC<JobDetailsProps> = ({ job, onClose, onOpenAuth
               <span className="details-meta-title">Deadline</span>
               <span className="details-meta-value">
                 <Calendar size={16} />
-                {formatDate(job.deadline)}
+                {formatDate(renderJob.deadline)}
               </span>
             </div>
             <div>
               <span className="details-meta-title">Category Skills</span>
               <span className="details-meta-value" style={{ fontSize: '0.85rem' }}>
-                {job.category?.name} Core
+                {renderJob.category?.name} Core
               </span>
             </div>
             <div>
               <span className="details-meta-title">Active Proposals</span>
               <span className="details-meta-value">
-                {job.bids_count} submissions
+                {renderJob.bids_count} submissions
               </span>
             </div>
           </div>
@@ -174,7 +201,7 @@ export const JobDetails: React.FC<JobDetailsProps> = ({ job, onClose, onOpenAuth
           <div>
             <h4 className="details-section-title">Job Description</h4>
             <p className="details-section-text">
-              {job.description}
+              {renderJob.description}
             </p>
           </div>
 
@@ -220,7 +247,7 @@ export const JobDetails: React.FC<JobDetailsProps> = ({ job, onClose, onOpenAuth
                   You have already submitted a bid for this job.
                 </p>
               </div>
-            ) : job.status !== 'open' ? (
+            ) : renderJob.status !== 'open' ? (
               /* Job Closed Block */
               <div className="details-closed-card">
                 <p className="details-closed-text">
@@ -249,24 +276,17 @@ export const JobDetails: React.FC<JobDetailsProps> = ({ job, onClose, onOpenAuth
                       onChange={(e) => setPrice(e.target.value)}
                       className="details-form-input"
                     />
-                    {validationErrors.proposed_price && (
-                      <span className="auth-validation-error">{validationErrors.proposed_price[0]}</span>
-                    )}
                   </div>
-
                   <div className="details-form-group">
                     <label className="details-form-label">Est. Delivery (Days)</label>
                     <input 
                       type="number"
                       required
-                      placeholder="e.g. 10"
+                      placeholder="e.g. 5"
                       value={deliveryDays}
                       onChange={(e) => setDeliveryDays(e.target.value)}
                       className="details-form-input"
                     />
-                    {validationErrors.estimated_delivery_days && (
-                      <span className="auth-validation-error">{validationErrors.estimated_delivery_days[0]}</span>
-                    )}
                   </div>
                 </div>
 
@@ -274,29 +294,22 @@ export const JobDetails: React.FC<JobDetailsProps> = ({ job, onClose, onOpenAuth
                   <label className="details-form-label">Cover Letter</label>
                   <textarea 
                     required
-                    placeholder="Describe your plan to solve this client's request..."
+                    placeholder="Describe how you can help this client with their accounting needs..."
                     value={coverLetter}
                     onChange={(e) => setCoverLetter(e.target.value)}
                     className="details-form-textarea"
-                    style={{ minHeight: '100px' }}
                   />
-                  {validationErrors.cover_letter && (
-                    <span className="auth-validation-error">{validationErrors.cover_letter[0]}</span>
-                  )}
                 </div>
 
                 <div className="details-form-group">
-                  <label className="details-form-label">Experience Summary</label>
+                  <label className="details-form-label">Relevant Experience Summary</label>
                   <textarea 
                     required
-                    placeholder="Summarize your credentials (e.g. CPA license, previous filings)..."
+                    placeholder="Summarize your credentials, certifications, or past projects..."
                     value={experienceSummary}
                     onChange={(e) => setExperienceSummary(e.target.value)}
                     className="details-form-textarea"
                   />
-                  {validationErrors.experience_summary && (
-                    <span className="auth-validation-error">{validationErrors.experience_summary[0]}</span>
-                  )}
                 </div>
 
                 <button 
@@ -304,7 +317,7 @@ export const JobDetails: React.FC<JobDetailsProps> = ({ job, onClose, onOpenAuth
                   disabled={submitting}
                   className="btn-details-submit"
                 >
-                  {submitting ? 'Submitting Bid...' : 'Submit Proposal'}
+                  {submitting ? 'Submitting Proposal...' : 'Submit Proposal'}
                 </button>
               </form>
             )}
@@ -314,3 +327,5 @@ export const JobDetails: React.FC<JobDetailsProps> = ({ job, onClose, onOpenAuth
     </div>
   );
 };
+
+export default JobDetails;

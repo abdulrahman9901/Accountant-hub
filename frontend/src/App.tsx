@@ -249,7 +249,6 @@ export const App: React.FC = () => {
 
       {/* Right Slide Job Detail & Bid form drawer */}
       <JobDetails 
-        key={selectedJob?.id}
         job={selectedJob} 
         onClose={() => setSelectedJob(null)} 
         onOpenAuth={(mode) => {
