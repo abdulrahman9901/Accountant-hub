@@ -1,6 +1,6 @@
-import { ApiResponse } from '../types';
+import type { ApiResponse } from '../types';
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 export interface ApiError extends Error {
   status: number;
