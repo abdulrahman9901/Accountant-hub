@@ -10,6 +10,7 @@ import { RegisterModal } from './components/RegisterModal';
 import { request } from './api/client';
 import type { Job } from './types';
 import { Briefcase, ChevronLeft, ChevronRight, Sliders, RefreshCw } from 'lucide-react';
+import './App.css';
 
 export const App: React.FC = () => {
   // Navigation layout state
@@ -109,7 +110,7 @@ export const App: React.FC = () => {
   }, [selectedJob, handleSelectJobById]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', backgroundColor: 'var(--light-bg)' }}>
+    <div className="app-wrapper">
       {/* Stick navbar header */}
       <Header 
         activeTab={activeTab} 
@@ -124,16 +125,16 @@ export const App: React.FC = () => {
       />
 
       {/* Main layout container */}
-      <main className="container" style={{ flex: 1, padding: '40px 24px', display: 'flex', flexDirection: 'column', gap: '32px' }}>
+      <main className="container app-main">
         {activeTab === 'jobs' ? (
           /* SECTION 1: Browse listings view */
-          <div style={{ display: 'flex', gap: '40px', alignItems: 'flex-start' }}>
+          <div className="browse-layout">
             
             {/* Sidebar filter controls */}
             <FilterSidebar filters={filters} onChange={handleFiltersChange} />
 
             {/* Main listing panel grid */}
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            <div className="listing-panel">
               
               {/* Active Filter Chips bar */}
               <ActiveFilters 
@@ -143,64 +144,36 @@ export const App: React.FC = () => {
               />
 
               {/* Title counters */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <h2 style={{ fontSize: '1.4rem', fontWeight: 700, letterSpacing: '-0.02em', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Briefcase size={20} style={{ color: 'var(--primary)' }} />
+              <div className="listing-header-bar">
+                <h2 className="listing-title">
+                  <Briefcase size={20} className="listing-title-icon" />
                   Available Postings
                 </h2>
-                <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-muted)' }}>
+                <span className="listing-page-indicator">
                   Page {currentPage} of {lastPage}
                 </span>
               </div>
 
               {loading ? (
                 /* Spinner loader */
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '320px' }}>
+                <div className="listing-loader-wrap">
                   <RefreshCw className="animate-spin" size={26} style={{ color: 'var(--primary)' }} />
                 </div>
               ) : jobs.length === 0 ? (
                 /* Empty state screen fallback */
-                <div className="glass" style={{
-                  backgroundColor: '#ffffff',
-                  border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius-md)',
-                  padding: '80px 24px',
-                  textAlign: 'center',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: '16px'
-                }}>
-                  <div style={{
-                    width: '64px',
-                    height: '64px',
-                    borderRadius: '50%',
-                    backgroundColor: 'rgba(1, 154, 81, 0.08)',
-                    color: 'var(--primary)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}>
+                <div className="glass listing-empty-card">
+                  <div className="listing-empty-icon-wrap">
                     <Sliders size={28} />
                   </div>
                   <div>
-                    <h3 style={{ fontWeight: 700, fontSize: '1.15rem', marginBottom: '6px' }}>No Listings Found</h3>
-                    <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', maxWidth: '380px', margin: '0 auto' }}>
+                    <h3 className="listing-empty-title">No Listings Found</h3>
+                    <p className="listing-empty-text">
                       No jobs matching your filter criteria were found. Try relaxing your filters!
                     </p>
                   </div>
                   <button 
                     onClick={handleClearAllFilters}
-                    style={{
-                      backgroundColor: 'var(--primary)',
-                      color: '#ffffff',
-                      padding: '10px 20px',
-                      borderRadius: 'var(--radius-sm)',
-                      fontWeight: 600,
-                      fontSize: '0.85rem',
-                      cursor: 'pointer',
-                      boxShadow: '0 4px 12px rgba(1, 154, 81, 0.2)'
-                    }}
+                    className="btn-listing-empty-action"
                   >
                     Clear All Filters
                   </button>
@@ -208,11 +181,7 @@ export const App: React.FC = () => {
               ) : (
                 /* Jobs Cards Listing Grid */
                 <>
-                  <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-                    gap: '24px'
-                  }}>
+                  <div className="jobs-cards-grid">
                     {jobs.map((job) => (
                       <JobCard 
                         key={job.id} 
@@ -224,60 +193,24 @@ export const App: React.FC = () => {
 
                   {/* Pagination triggers */}
                   {lastPage > 1 && (
-                    <div style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '16px',
-                      marginTop: '24px',
-                      paddingTop: '24px',
-                      borderTop: '1px solid var(--border)'
-                    }}>
+                    <div className="pagination-bar">
                       <button
                         disabled={currentPage === 1}
                         onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '6px',
-                          backgroundColor: '#ffffff',
-                          border: '1px solid var(--border)',
-                          padding: '10px 18px',
-                          borderRadius: 'var(--radius-sm)',
-                          fontSize: '0.85rem',
-                          fontWeight: 600,
-                          cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
-                          opacity: currentPage === 1 ? 0.5 : 1,
-                          boxShadow: 'var(--shadow-sm)',
-                          transition: 'var(--transition)'
-                        }}
+                        className="btn-pagination"
                       >
                         <ChevronLeft size={16} />
                         Previous
                       </button>
 
-                      <span style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-muted)' }}>
+                      <span className="pagination-indicator">
                         {currentPage} / {lastPage}
                       </span>
 
                       <button
                         disabled={currentPage === lastPage}
                         onClick={() => setCurrentPage((p) => Math.min(p + 1, lastPage))}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '6px',
-                          backgroundColor: '#ffffff',
-                          border: '1px solid var(--border)',
-                          padding: '10px 18px',
-                          borderRadius: 'var(--radius-sm)',
-                          fontSize: '0.85rem',
-                          fontWeight: 600,
-                          cursor: currentPage === lastPage ? 'not-allowed' : 'pointer',
-                          opacity: currentPage === lastPage ? 0.5 : 1,
-                          boxShadow: 'var(--shadow-sm)',
-                          transition: 'var(--transition)'
-                        }}
+                        className="btn-pagination"
                       >
                         Next
                         <ChevronRight size={16} />
