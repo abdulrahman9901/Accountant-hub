@@ -19,6 +19,7 @@ class JobListingTest extends TestCase
         parent::setUp();
         // Seed standard categories and jobs
         $this->seed(DatabaseSeeder::class);
+        \Illuminate\Support\Facades\Cache::flush();
     }
 
     /**
@@ -155,6 +156,7 @@ class JobListingTest extends TestCase
         // Find one open job and close it
         $job = Job::where('status', 'open')->firstOrFail();
         $job->update(['status' => 'closed']);
+        \Illuminate\Support\Facades\Cache::flush();
 
         $response = $this->getJson('/api/jobs');
         $response->assertStatus(200);

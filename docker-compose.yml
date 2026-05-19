@@ -40,7 +40,7 @@ services:
       mysql:
         condition: service_healthy
     command: >
-      bash -c "if [ ! -d \"vendor\" ]; then composer install --no-interaction --prefer-dist; fi
+      bash -c "if [ ! -f \"vendor/autoload.php\" ]; then composer install --no-interaction --prefer-dist; fi
       && php artisan serve --host=0.0.0.0 --port=8000"
 
 volumes:
